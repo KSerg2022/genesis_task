@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../docker/develop/Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - mongo
+    env_file:
+      - ./backend/.env
+    environment:
+      - MONGO_URI=mongodb://root:genesis@mongo:27017
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/db:/data/db
+      - ./data/dump:/data/dump
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: genesis
