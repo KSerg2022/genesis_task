@@ -1,22 +1,10 @@
-import { Frequency } from "../models/subscribtion.model";
+import { ISubscription } from "../models/subscribtion.model";
+import { IWeather } from "../models/weather.model";
 
-export type TUser = {
-  email: string;
-  subscription: string[];
-};
-
-export type Subscription = {
-  city: string;
-  period: Frequency;
-};
-
-export type City = {
-  city: string;
-  location: {
-    lat: number;
-    lon: number;
-  };
-};
+export type TSubscription = Pick<
+  ISubscription,
+  "email" | "city" | "frequency" | "confirmed"
+>;
 
 export type TGeoCity = {
   name: string;
@@ -24,7 +12,12 @@ export type TGeoCity = {
   lon: number;
 };
 
-export type TWeather = {
+export type TWeather = Pick<
+  IWeather,
+  "temperature" | "humidity" | "description"
+>;
+
+export type TWeatherResponse = {
   weather: {
     description: string;
   }[];
@@ -32,10 +25,4 @@ export type TWeather = {
     temp: number;
     humidity: number;
   };
-};
-
-export type TWeatherResponse = {
-  temperature: number;
-  humidity: number;
-  description: string;
 };

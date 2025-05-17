@@ -1,33 +1,33 @@
 import { Router } from "express";
-import jwt from "jsonwebtoken";
-import mongoose from "mongoose";
-import { Frequency, Subscription } from "../models/subscribtion.model";
-import { User } from "../models/user.model";
+import { Subscription } from "../models/subscribtion.model";
+import { getToken, TPayload, verifyToken } from "../jwtService";
+import { confirmEmail } from "../emailService";
 
 const router = Router();
-const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
-router.get("/confirm", async (req, res) => {
-  const { token } = req.query;
+router.get("/confirm/:token", async (req, res) => {
+  const { token } = req.params;
+
   if (!token || typeof token !== "string")
     return res.status(400).send("Token is required");
   try {
-    const payload = jwt.verify(token, JWT_SECRET) as {
-      email: string;
-      cityId: mongoose.Types.ObjectId;
-      frequency: Frequency;
-    };
+    const payload: TPayload = verifyToken(token) as TPayload;
+    console.log(payload);
 
-    const subscription = await Subscription.create({
-      city: payload.cityId,
+    await Subscription.create({
+      email: payload.email,
+      city: payload.city,
       frequency: payload.frequency,
       confirmed: true,
     });
-    const subscriptionId = subscription._id;
-    await User.create({
-      subscription: [subscriptionId],
+
+    const tokenUnSubscribe = getToken({
       email: payload.email,
+      city: payload.city,
+      frequency: payload.frequency,
     });
+
+    await confirmEmail(payload.email, tokenUnSubscribe, payload);
 
     res.send(`Email ${payload.email} confirmed successfully!`);
   } catch (err) {

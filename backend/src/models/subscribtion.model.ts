@@ -6,7 +6,8 @@ export enum Frequency {
 }
 
 export interface ISubscription extends Document {
-  city: mongoose.Types.ObjectId;
+  email: string;
+  city: string;
   frequency: Frequency;
 
   confirmed: boolean;
@@ -15,7 +16,8 @@ export interface ISubscription extends Document {
 }
 const subscriptionSchema: Schema<ISubscription> = new mongoose.Schema(
   {
-    city: { type: mongoose.Schema.Types.ObjectId, ref: "City", required: true },
+    email: { type: String, required: true, unique: true },
+    city: { type: String, ref: "City", required: true },
     frequency: { type: String, enum: Object.values(Frequency), required: true },
     confirmed: { type: Boolean, required: true, default: false },
   },
