@@ -6,6 +6,7 @@ import unconfirmRoutes from "./routes/unConfirm";
 import weather from "./routes/weather";
 import cors from "cors";
 import mongoose from "mongoose";
+import { startAgenda } from "./agenda";
 
 dotenv.config();
 
@@ -29,8 +30,12 @@ const main = async () => {
     .connect(mongoUrl, {
       dbName: "genesis",
     })
-    .then(() => {
+    .then(async () => {
       console.log("✅ MongoDB connected");
+      await startAgenda();
+    })
+    .then(() => {
+      console.log("✅ Agenda started");
       app.listen(PORT, () => {
         console.log(`🚀 Server running at http://localhost:${PORT}`);
       });

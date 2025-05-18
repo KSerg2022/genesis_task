@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 import { TPayload } from "./jwtService";
+import { TWeather } from "./types";
+import { ISubscription } from "./models/subscribtion.model";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
 
@@ -39,12 +41,37 @@ export const confirmEmail = async (
   await transporter.sendMail({
     from: '"No Reply" <noreply@example.com>',
     to: email,
-    subject: "Please confirm your subscription",
+    subject: "Your subscription",
     html: `<div>
-    <p>Thank you for confirming your subscription.!</p>
+    <p>Thank you for confirming your subscription!</p>
     <p>Your subscription:
-        city: ${payload.city},
+        city: ${payload.city.name},
         frequency: ${payload.frequency}.
+    </p>
+    <p>To unsubscribe, click the link:: <a href="${confirmUrl}">${confirmUrl}</a></p>
+    </din>`,
+  });
+};
+
+export const sendWeatherEmail = async (
+  sub: ISubscription,
+  token: string,
+  weather: TWeather,
+): Promise<void> => {
+  const confirmUrl = `${BASE_URL}/api/unconfirm/${token}`;
+
+  await transporter.sendMail({
+    from: '"No Reply" <noreply@example.com>',
+    to: sub.email,
+    subject: `Weather in the city ${sub.city.name}.`,
+    html: `<div>
+    <p>Weather in the city ${sub.city.name}.</p>
+    <P>Current temperature:  ${weather.temperature}</P>
+    <P>Humidity: ${weather.humidity}</P>
+    <P>Description: ${weather.description}</P>
+    <p>Your subscription:
+        city: ${sub.city.name},
+        frequency: ${sub.frequency}.
     </p>
     <p>To unsubscribe, click the link:: <a href="${confirmUrl}">${confirmUrl}</a></p>
     </din>`,

@@ -14,7 +14,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.14.3",
     "nodemailer": "^7.0.3",
-    "cors": "2.8.5"
+    "cors": "2.8.5",
+    "agenda": "^5.0.0"
   },
   "devDependencies": {
     "@types/express": "4.17.21",
