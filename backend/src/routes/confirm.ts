@@ -12,7 +12,6 @@ router.get("/confirm/:token", async (req, res) => {
     return res.status(400).send("Token is required");
   try {
     const payload: TPayload = verifyToken(token) as TPayload;
-    console.log(payload);
 
     await Subscription.create({
       email: payload.email,

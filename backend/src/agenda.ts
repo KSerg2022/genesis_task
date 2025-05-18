@@ -3,7 +3,7 @@ import { Frequency } from "./models/subscribtion.model";
 import { doWeatherJob } from "./jobs/sendWeatherEmail";
 
 const mongoConnectionString =
-  process.env.MONGO_URI || "mongodb://localhost:27017/weather";
+  process.env.MONGO_URI || "mongodb://localhost:27017";
 
 export const agenda = new Agenda({
   db: { address: mongoConnectionString, collection: "jobs" },
@@ -17,8 +17,13 @@ agenda.define("send daily emails", async () => {
   await doWeatherJob(Frequency.HOURLY);
 });
 
+// agenda.define("send 3 minutes emails", async () => {
+//   await doWeatherJob(Frequency.HOURLY);
+// });
+
 export const startAgenda = async () => {
   await agenda.start();
+  //   await agenda.every("3 minutes", "send 3 minutes emails"); // каждые три минуты для теста
   await agenda.every("0 * * * *", "send hourly emails"); // каждый час
   await agenda.every("0 8 * * *", "send daily emails"); // каждый день в 8 утра
 };

@@ -3,8 +3,8 @@ import { sendWeatherEmail } from "../emailService";
 import { getToken } from "../jwtService";
 import { Frequency, Subscription } from "../models/subscribtion.model";
 
-export const doWeatherJob = async (period: Frequency) => {
-  const subs = await Subscription.find({ frequency: period });
+export const doWeatherJob = async (frequency: Frequency) => {
+  const subs = await Subscription.find({ frequency: frequency });
 
   for (const sub of subs) {
     if (!sub.city || !sub.email) continue;
