@@ -1,6 +1,5 @@
-import { Frequency } from "../models/subscribtion.model";
+import { Frequency, ICity } from "../models/subscribtion.model";
 import { checkCity } from "./checkCity";
-import { TGeoCity } from "../types";
 
 export const checkInternetData = async (
   email: string,
@@ -9,7 +8,7 @@ export const checkInternetData = async (
 ): Promise<{
   internetData: boolean;
   message?: { [key: string]: string };
-  city?: TGeoCity;
+  city?: ICity;
 }> => {
   const isEmail = checkEmail(email);
   const isCity = await checkCity(city);

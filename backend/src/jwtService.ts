@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
-import { Frequency } from "./models/subscribtion.model";
+import { Frequency, ICity } from "./models/subscribtion.model";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret";
 
 export type TPayload = {
   email: string;
-  city: string;
+  city: ICity;
   frequency: Frequency;
 };
 

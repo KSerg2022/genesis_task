@@ -18,7 +18,7 @@ router.post("/subscribe", async (req, res) => {
   const tokenSubscribe = getToken(
     {
       email,
-      city: isInternetData.city?.name,
+      city: isInternetData.city,
       frequency,
     },
     "1h",

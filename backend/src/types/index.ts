@@ -6,12 +6,6 @@ export type TSubscription = Pick<
   "email" | "city" | "frequency" | "confirmed"
 >;
 
-export type TGeoCity = {
-  name: string;
-  lat: number;
-  lon: number;
-};
-
 export type TWeather = Pick<
   IWeather,
   "temperature" | "humidity" | "description"

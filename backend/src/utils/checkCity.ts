@@ -1,11 +1,11 @@
 import { getCity } from "../apiExternal/openweathermap/hourlyApi";
-import { TGeoCity } from "../types";
+import { ICity } from "../models/subscribtion.model";
 
 export const checkCity = async (
   city: string,
 ): Promise<{
   isCity: boolean;
-  city?: TGeoCity;
+  city?: ICity;
   message?: string;
 }> => {
   if (!city) return { isCity: false, message: "Invalid request. City is not" };
@@ -17,7 +17,7 @@ export const checkCity = async (
     };
 
   try {
-    const geoCity: TGeoCity | null = await getCity(city);
+    const geoCity: ICity | null = await getCity(city);
     if (!geoCity)
       return {
         isCity: false,

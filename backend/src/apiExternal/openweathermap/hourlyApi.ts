@@ -1,4 +1,5 @@
-import { TGeoCity, TWeather, TWeatherResponse } from "../../types";
+import { ICity } from "../../models/subscribtion.model";
+import { TWeather, TWeatherResponse } from "../../types";
 
 const API_WETHER = process.env.API_WETHER || "";
 export const weatherApi = async (
@@ -21,7 +22,7 @@ export const getCity = async (
   stateCode: string = "",
   countryCode: string = "",
   limit: number = 2,
-): Promise<TGeoCity | null> => {
+): Promise<ICity | null> => {
   if (!cityName) return null;
   const geoApi = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName},${stateCode},${countryCode}&limit=${limit}&appid=${API_WETHER}`;
 
