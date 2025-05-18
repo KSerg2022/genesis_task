@@ -8,7 +8,8 @@ router.get("/", async (req, res) => {
   const { city } = req.query;
 
   const isCity = await checkCity(city as string);
-  if (!isCity.isCity) return res.status(400).json({ message: isCity.message });
+  if (!isCity.isCity)
+    return res.status(isCity.status).json({ message: isCity.message });
 
   try {
     if (isCity.city) {

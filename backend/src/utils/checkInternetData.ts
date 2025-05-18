@@ -7,6 +7,7 @@ export const checkInternetData = async (
   frequency: Frequency,
 ): Promise<{
   internetData: boolean;
+  status: number;
   message?: { [key: string]: string };
   city?: ICity;
 }> => {
@@ -16,7 +17,12 @@ export const checkInternetData = async (
 
   const message: { [key: string]: string } = {};
   if (isEmail && isCity.isCity && isFrequency)
-    return { internetData: true, message: message, city: isCity.city };
+    return {
+      internetData: true,
+      status: 200,
+      message: message,
+      city: isCity.city,
+    };
 
   if (!isEmail) message.email = `Email: "${email}" is not valid"`;
 
@@ -24,7 +30,7 @@ export const checkInternetData = async (
     message.frequency = `Frequency can be only: "${Frequency.HOURLY}" or "${Frequency.DAILY}"`;
 
   if (!isCity.isCity) message.city = isCity.message || "";
-  return { internetData: false, message: message };
+  return { internetData: false, status: 400, message: message };
 };
 
 const checkEmail = (email: string): boolean => {
