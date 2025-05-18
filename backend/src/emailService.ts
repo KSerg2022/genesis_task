@@ -15,19 +15,27 @@ const transporter = nodemailer.createTransport({
 });
 
 export const subscribeEmail = async (
-  email: string,
+  payload: TPayload,
   token: string,
 ): Promise<void> => {
   const confirmUrl = `${BASE_URL}/api/confirm/${token}`;
 
   await transporter.sendMail({
     from: '"No Reply" <noreply@example.com>',
-    to: email,
+    to: payload.email,
     subject: "Please confirm your subscription",
-    html: `<div>
-        <p>The link is valid for one hour!</p>
-        <p>Click to subscribe: <a href="${confirmUrl}">${confirmUrl}</a></p>
-        </din>`,
+    html: `
+    <div>
+      <h2>Your subscription:</h2>
+        <ul>
+          <li>city: ${payload.city.name}</li>
+          <li>frequency: ${payload.frequency}/li>
+        </ul>
+      <hr>
+      <h3>The link is valid for one hour!</h3>
+      <p>Click to subscribe: <a href="${confirmUrl}">${confirmUrl}</a></p>
+    </div>
+        `,
   });
 };
 
@@ -42,14 +50,18 @@ export const confirmEmail = async (
     from: '"No Reply" <noreply@example.com>',
     to: email,
     subject: "Your subscription",
-    html: `<div>
-    <p>Thank you for confirming your subscription!</p>
-    <p>Your subscription:
-        city: ${payload.city.name},
-        frequency: ${payload.frequency}.
-    </p>
-    <p>To unsubscribe, click the link:: <a href="${confirmUrl}">${confirmUrl}</a></p>
-    </din>`,
+    html: `
+    <div>
+      <h2>Thank you for confirming your subscription!</h2>
+        <h3>Your subscription:</h3>
+        <ul>
+          <li>city: ${payload.city.name}</li>
+          <li>frequency: ${payload.frequency}/li>
+        </ul>
+      <hr>
+      <p>To unsubscribe, click the link:: <a href="${confirmUrl}">${confirmUrl}</a></p>
+    </div>
+    `,
   });
 };
 
@@ -64,16 +76,23 @@ export const sendWeatherEmail = async (
     from: '"No Reply" <noreply@example.com>',
     to: sub.email,
     subject: `Weather in the city ${sub.city.name}.`,
-    html: `<div>
-    <p>Weather in the city ${sub.city.name}.</p>
-    <P>Current temperature:  ${weather.temperature}</P>
-    <P>Humidity: ${weather.humidity}</P>
-    <P>Description: ${weather.description}</P>
-    <p>Your subscription:
-        city: ${sub.city.name},
-        frequency: ${sub.frequency}.
-    </p>
-    <p>To unsubscribe, click the link:: <a href="${confirmUrl}">${confirmUrl}</a></p>
-    </din>`,
+    html: `
+      <div>
+        <h2>Weather in the city ${sub.city.name}.</h2>
+        <h3>Current:</h3>
+        <ul>
+          <li>Temperature: ${weather.temperature}</li>
+          <li>Humidity: ${weather.humidity}</li>
+          <li>Description: ${weather.description}</li>
+        </ul>
+        <hr>
+        <h4>Your subscription:</h4>
+        <ul>
+          <li>city: ${sub.city.name}</li>
+          <li>frequency: ${sub.frequency}/li>
+        </ul>
+        <p>To unsubscribe, click the link:: <a href="${confirmUrl}">${confirmUrl}</a></p>
+      </div>
+    `,
   });
 };
