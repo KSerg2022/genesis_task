@@ -15,17 +15,15 @@ router.post("/subscribe", async (req, res) => {
       info: isInternetData.message,
     });
 
-  const tokenSubscribe = getToken(
-    {
-      email,
-      city: isInternetData.city,
-      frequency,
-    },
-    "1h",
-  );
+  const payload = {
+    email,
+    city: isInternetData.city,
+    frequency,
+  };
+  const tokenSubscribe = getToken(payload, "1h");
 
   try {
-    await subscribeEmail(email, tokenSubscribe);
+    await subscribeEmail(payload, tokenSubscribe);
 
     return res.json({ message: `Confirmation email sent` });
   } catch (error) {

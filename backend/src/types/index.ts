@@ -3,7 +3,7 @@ import { IWeather } from "../models/weather.model";
 
 export type TSubscription = Pick<
   ISubscription,
-  "email" | "city" | "frequency" | "confirmed"
+  "email" | "city" | "frequency" | "confirmed" | "tokenUnSubscribe"
 >;
 
 export type TWeather = Pick<

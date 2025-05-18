@@ -16,6 +16,7 @@ export interface ISubscription extends Document {
   frequency: Frequency;
 
   confirmed: boolean;
+  tokenUnSubscribe: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -29,6 +30,7 @@ const subscriptionSchema: Schema<ISubscription> = new mongoose.Schema(
     },
     frequency: { type: String, enum: Object.values(Frequency), required: true },
     confirmed: { type: Boolean, required: true, default: false },
+    tokenUnSubscribe: { type: String, required: true },
   },
   { timestamps: true },
 );

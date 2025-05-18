@@ -13,20 +13,21 @@ router.get("/confirm/:token", async (req, res) => {
   try {
     const payload: TPayload = verifyToken(token) as TPayload;
 
-    await Subscription.create({
-      email: payload.email,
-      city: payload.city,
-      frequency: payload.frequency,
-      confirmed: true,
-    });
-
     const tokenUnSubscribe = getToken({
       email: payload.email,
       city: payload.city,
       frequency: payload.frequency,
     });
 
-    await confirmEmail(payload.email, tokenUnSubscribe, payload);
+    await Subscription.create({
+      email: payload.email,
+      city: payload.city,
+      frequency: payload.frequency,
+      confirmed: true,
+      tokenUnSubscribe: tokenUnSubscribe,
+    });
+
+    await confirmEmail(payload, tokenUnSubscribe);
 
     res.send(`Email ${payload.email} confirmed successfully!`);
   } catch (err) {

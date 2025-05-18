@@ -29,7 +29,7 @@ export const subscribeEmail = async (
       <h2>Your subscription:</h2>
         <ul>
           <li>city: ${payload.city.name}</li>
-          <li>frequency: ${payload.frequency}/li>
+          <li>frequency: ${payload.frequency}</li>
         </ul>
       <hr>
       <h3>The link is valid for one hour!</h3>
@@ -40,15 +40,14 @@ export const subscribeEmail = async (
 };
 
 export const confirmEmail = async (
-  email: string,
-  token: string,
   payload: TPayload,
+  token: string,
 ): Promise<void> => {
   const confirmUrl = `${BASE_URL}/api/unconfirm/${token}`;
 
   await transporter.sendMail({
     from: '"No Reply" <noreply@example.com>',
-    to: email,
+    to: payload.email,
     subject: "Your subscription",
     html: `
     <div>
@@ -56,10 +55,10 @@ export const confirmEmail = async (
         <h3>Your subscription:</h3>
         <ul>
           <li>city: ${payload.city.name}</li>
-          <li>frequency: ${payload.frequency}/li>
+          <li>frequency: ${payload.frequency}</li>
         </ul>
       <hr>
-      <p>To unsubscribe, click the link:: <a href="${confirmUrl}">${confirmUrl}</a></p>
+      <p>To unsubscribe, click the link: <a href="${confirmUrl}">${confirmUrl}</a></p>
     </div>
     `,
   });
@@ -67,10 +66,9 @@ export const confirmEmail = async (
 
 export const sendWeatherEmail = async (
   sub: ISubscription,
-  token: string,
   weather: TWeather,
 ): Promise<void> => {
-  const confirmUrl = `${BASE_URL}/api/unconfirm/${token}`;
+  const confirmUrl = `${BASE_URL}/api/unconfirm/${sub.tokenUnSubscribe}`;
 
   await transporter.sendMail({
     from: '"No Reply" <noreply@example.com>',
@@ -89,7 +87,7 @@ export const sendWeatherEmail = async (
         <h4>Your subscription:</h4>
         <ul>
           <li>city: ${sub.city.name}</li>
-          <li>frequency: ${sub.frequency}/li>
+          <li>frequency: ${sub.frequency}</li>
         </ul>
         <p>To unsubscribe, click the link:: <a href="${confirmUrl}">${confirmUrl}</a></p>
       </div>
