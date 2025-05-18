@@ -6,13 +6,20 @@ export const checkCity = async (
 ): Promise<{
   isCity: boolean;
   city?: ICity;
+  status: number;
   message?: string;
 }> => {
-  if (!city) return { isCity: false, message: "Invalid request. City is not" };
+  if (!city)
+    return {
+      isCity: false,
+      status: 400,
+      message: "Invalid request. City is not",
+    };
 
   if (typeof city !== "string")
     return {
       isCity: false,
+      status: 400,
       message: `Invalid request. City: "${city}" - is not string`,
     };
 
@@ -21,6 +28,7 @@ export const checkCity = async (
     if (!geoCity)
       return {
         isCity: false,
+        status: 404,
         message: `Invalid request. City: "${city}" - is not correct`,
       };
     return {
@@ -30,8 +38,9 @@ export const checkCity = async (
         lat: geoCity.lat,
         lon: geoCity.lon,
       },
+      status: 200,
     };
   } catch (err) {
-    return { isCity: false, message: `Server error: ${err}` };
+    return { isCity: false, status: 400, message: `Server error: ${err}` };
   }
 };

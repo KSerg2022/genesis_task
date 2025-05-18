@@ -7,7 +7,7 @@ const router = Router();
 router.get("/unconfirm/:token", async (req, res) => {
   const { token } = req.params;
   if (!token || typeof token !== "string")
-    return res.status(400).send("Token is required");
+    return res.status(404).send("Token not found");
   try {
     const payload = verifyToken(token) as TPayload;
 
@@ -15,14 +15,16 @@ router.get("/unconfirm/:token", async (req, res) => {
       email: payload.email,
     });
     if (isDeleted.deletedCount > 0) {
-      return res.send(`Subscription for email: "${payload.email}" canceled!`);
+      return res.send(
+        `Subscription for email: "${payload.email}" successfully!`,
+      );
     }
 
     return res
       .status(400)
       .send(`Subscription for email: "${payload.email}" does not exist!`);
   } catch (err) {
-    res.status(400).send(`Invalid or expired token: ${err}`);
+    res.status(400).send(`Invalid token: ${err}`);
   }
 });
 

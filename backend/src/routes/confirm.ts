@@ -9,7 +9,7 @@ router.get("/confirm/:token", async (req, res) => {
   const { token } = req.params;
 
   if (!token || typeof token !== "string")
-    return res.status(400).send("Token is required");
+    return res.status(404).send("Token not found");
   try {
     const payload: TPayload = verifyToken(token) as TPayload;
 
@@ -19,19 +19,23 @@ router.get("/confirm/:token", async (req, res) => {
       frequency: payload.frequency,
     });
 
-    await Subscription.create({
-      email: payload.email,
-      city: payload.city,
-      frequency: payload.frequency,
-      confirmed: true,
-      tokenUnSubscribe: tokenUnSubscribe,
-    });
+    try {
+      await Subscription.create({
+        email: payload.email,
+        city: payload.city,
+        frequency: payload.frequency,
+        confirmed: true,
+        tokenUnSubscribe: tokenUnSubscribe,
+      });
+    } catch (err) {
+      res.status(409).send(`Email already subscribed: ${err}`);
+    }
 
     await confirmEmail(payload, tokenUnSubscribe);
 
-    res.send(`Email ${payload.email} confirmed successfully!`);
+    res.send(`Confirm email subscription (${payload.email}) successfully!`);
   } catch (err) {
-    res.status(400).send(`Invalid or expired token: ${err}`);
+    res.status(400).send(`Invalid token: ${err}`);
   }
 });
 
