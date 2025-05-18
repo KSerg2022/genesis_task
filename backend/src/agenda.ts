@@ -10,11 +10,11 @@ export const agenda = new Agenda({
 });
 
 agenda.define("send hourly emails", async () => {
-  await doWeatherJob(Frequency.DAILY);
+  await doWeatherJob(Frequency.HOURLY);
 });
 
 agenda.define("send daily emails", async () => {
-  await doWeatherJob(Frequency.HOURLY);
+  await doWeatherJob(Frequency.DAILY);
 });
 
 // agenda.define("send 3 minutes emails", async () => {
