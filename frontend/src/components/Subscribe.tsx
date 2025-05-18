@@ -10,8 +10,6 @@ export const Subscribe = () => {
   });
 
   const submitFunc = useCallback(async () => {
-    console.log("formData", formData);
-    console.log("?", !!(formData.city && formData.email && formData.frequency));
     if (formData.city && formData.email && formData.frequency) {
       const response = await subscribe({
         email: formData.email,
