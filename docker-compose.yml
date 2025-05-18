@@ -2,7 +2,7 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: ../docker/develop/Dockerfile
+      dockerfile: ../docker/develop/backend/Dockerfile
     ports:
       - "5000:5000"
     volumes:
@@ -12,7 +12,21 @@ services:
     env_file:
       - ./backend/.env
     environment:
+      - NODE_ENV=development
       - MONGO_URI=mongodb://root:genesis@mongo:27017
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/develop/frontend/Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
 
   mongo:
     image: mongo
