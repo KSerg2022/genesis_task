@@ -1,17 +1,11 @@
 import express from "express";
-import dotenv from "dotenv";
-import subscribeRoutes from "./routes/subscribe";
-import confirmRoutes from "./routes/confirm";
-import unconfirmRoutes from "./routes/unConfirm";
-import weather from "./routes/weather";
+import { subscribeRoutes } from "./routes/subscribe";
+import { confirmRoutes } from "./routes/confirm";
+import { unConfirmRoutes } from "./routes/unConfirm";
+import { weatherRoutes } from "./routes/weather";
 import cors from "cors";
-import mongoose from "mongoose";
 import { startAgenda } from "./agenda";
-
-dotenv.config();
-
-const mongoUrl = process.env.MONGO_URI || "";
-const PORT = process.env.PORT || 5000;
+import pool from "./db/db";
 
 const main = async () => {
   const app = express();
@@ -19,30 +13,28 @@ const main = async () => {
   app.use(express.json());
   app.use(cors());
 
-  app.use("/api/weather", weather);
+  app.use("/api/weather", weatherRoutes(pool));
 
-  app.use("/api", subscribeRoutes);
-  app.use("/api", confirmRoutes);
-  app.use("/api", unconfirmRoutes);
+  app.use("/api", subscribeRoutes(pool));
+  app.use("/api", confirmRoutes(pool));
+  app.use("/api", unConfirmRoutes(pool));
 
   console.log("start init db");
-  mongoose
-    .connect(mongoUrl, {
-      dbName: "genesis",
-    })
-    .then(async () => {
-      console.log("✅ MongoDB connected");
-      await startAgenda();
-    })
-    .then(() => {
-      console.log("✅ Agenda started");
-      app.listen(PORT, () => {
-        console.log(`🚀 Server running at http://localhost:${PORT}`);
-      });
-    })
-    .catch(err => {
-      console.error("❌ MongoDB connection error:", err);
+  try {
+    await pool.connect();
+    console.log("✅ PostgreSQL connected");
+
+    await startAgenda(); // Если у тебя Agenda не зависит от Mongo
+
+    console.log("✅ Agenda started");
+
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running at http://localhost:${PORT}`);
     });
+  } catch (err) {
+    console.error("❌ PostgreSQL connection error:", err);
+  }
 };
 
 main().catch(e => console.error(e));

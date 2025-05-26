@@ -8,7 +8,7 @@ services:
     volumes:
       - ./backend:/app
     depends_on:
-      - mongo
+      - postgres
     env_file:
       - ./backend/.env
     environment:
@@ -28,13 +28,20 @@ services:
     depends_on:
       - backend
 
-  mongo:
-    image: mongo
+  postgres:
+    image: postgres
+    restart: always
     ports:
-      - "27017:27017"
+      - "5432:5432"
     volumes:
-      - ./data/db:/data/db
-      - ./data/dump:/data/dump
+      - ./data/pgdb:/var/lib/postgresql/data
+      - ./data/dump/psotgres:/data/dump
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: genesis
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: genesis
+      POSTGRES_DB: genesisdb
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "root", "-d", "genesisdb"]
+      interval: 1s
+      timeout: 5s
+      retries: 10

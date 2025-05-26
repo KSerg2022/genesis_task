@@ -6,7 +6,7 @@ export const Subscribe = () => {
   const [formData, setFormData] = useState<TSubscribe>({
     email: "",
     city: "",
-    frequency: Frequency.HOURLY,
+    frequency: Frequency.HOURLY
   });
 
   const submitFunc = useCallback(async () => {
@@ -14,7 +14,7 @@ export const Subscribe = () => {
       const response = await subscribe({
         email: formData.email,
         city: formData.city,
-        frequency: formData.frequency,
+        frequency: formData.frequency
       });
 
       console.log("response", response);
@@ -47,7 +47,7 @@ export const Subscribe = () => {
             onChange={e => {
               setFormData({
                 ...formData,
-                email: e.target.value,
+                email: e.target.value
               });
             }}
           />
@@ -67,7 +67,7 @@ export const Subscribe = () => {
             onChange={e => {
               setFormData({
                 ...formData,
-                city: e.target.value,
+                city: e.target.value
               });
             }}
           />
@@ -88,7 +88,7 @@ export const Subscribe = () => {
               console.log(e);
               setFormData({
                 ...formData,
-                frequency: e.target.value as TFrequency,
+                frequency: e.target.value as TFrequency
               });
             }}
           >
